@@ -1,0 +1,632 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111111">
+  <meta name="description" content="FOGGY — discover and buy singles and albums directly from independent artists. Music that stays yours.">
+  <meta name="application-name" content="FOGGY">
+
+  <title>FOGGY — Music, yours to keep</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+
+
+<header class="topbar">
+
+  <a class="brand" href="#" aria-label="FOGGY home">
+    FOGGY<span>.</span>
+  </a>
+
+  <nav class="desktop-nav" id="mainNavigation" aria-label="Main navigation">
+    <a href="#discover">Discover</a>
+    <a href="#singles">Singles</a>
+    <a href="#albums">Albums</a>
+    <a href="#artists">For Artists</a>
+  </nav>
+
+  <div class="top-actions">
+
+    <button
+      class="icon-button"
+      id="libraryButton"
+      type="button"
+    >
+      My Library
+    </button>
+
+    <button
+      class="button button-light"
+      id="signInButton"
+      type="button"
+    >
+      Sign in
+    </button>
+
+    <button
+      class="menu-toggle"
+      id="menuToggle"
+      type="button"
+      aria-label="Toggle navigation"
+      aria-expanded="false"
+      aria-controls="mainNavigation"
+    >
+      <span aria-hidden="true">▦</span>
+    </button>
+
+  </div>
+
+</header>
+
+  <!-- HERO -->
+
+  <section class="hero">
+
+    <div class="hero-copy">
+
+      <p class="eyebrow">
+        We Dont Own The Music. You Do.
+      </p>
+
+      <h1>
+        Sell & Buy Music Here.<br>
+        <span>Before & After Streaming Platforms.</span>
+      </h1>
+
+      <p class="hero-description">
+        Discover independent artists, buy singles and albums,
+        and keep every purchase in your device storage and
+        FOGGY library.
+      </p>
+
+      <div class="hero-actions">
+
+        <a class="button button-accent" href="#discover">
+          Explore music <span>↗</span>
+        </a>
+
+        <a class="text-link" href="#artists">
+          I'm an artist <span>→</span>
+        </a>
+
+      </div>
+
+      <div class="hero-note">
+        <span class="pulse"></span>
+        A marketplace built for artists and music lovers
+      </div>
+
+    </div>
+
+
+    <div class="hero-art" aria-label="FOGGY record artwork">
+
+      <div class="art-orbit orbit-one"></div>
+      <div class="art-orbit orbit-two"></div>
+
+      <div class="art-disc">
+        <div class="disc-label">F<span>.</span></div>
+      </div>
+
+      <div class="art-caption">
+        YOUR NEXT<br>ADDICTIVE SOUND.
+      </div>
+
+      <div class="art-index">
+        001 / FOGGY
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- MUSIC DISCOVERY -->
+
+  <section class="section discover-section" id="discover">
+
+    <div class="section-heading">
+
+      <div>
+        <p class="eyebrow">THE FOGGY STORE</p>
+        <h2>Discover music</h2>
+      </div>
+
+      <span class="section-aside">
+        FRESH FINDS. INDEPENDENT VOICES.
+      </span>
+
+    </div>
+
+
+    <div class="filter-row">
+
+      <label class="search-box">
+
+        <span aria-hidden="true">⌕</span>
+
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Search tracks, albums or artists..."
+          autocomplete="off"
+          aria-label="Search music and artists"
+        >
+
+      </label>
+
+
+      <div class="filter-buttons" aria-label="Music categories">
+
+        <button
+          class="filter-button active"
+          data-filter="all"
+          type="button"
+          aria-pressed="true"
+        >
+          All music
+        </button>
+
+        <button
+          class="filter-button"
+          data-filter="single"
+          type="button"
+          aria-pressed="false"
+        >
+          Singles
+        </button>
+
+        <button
+          class="filter-button"
+          data-filter="album"
+          type="button"
+          aria-pressed="false"
+        >
+          Albums
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- Real published music will be loaded here -->
+
+    <div
+      class="music-grid"
+      id="musicGrid"
+      aria-live="polite"
+      aria-busy="false"
+    ></div>
+
+
+    <p class="empty-state" id="emptyState" hidden>
+      No music matches your search yet.
+    </p>
+
+    <p1
+      class="empty-state"
+      id="musicLoading"
+      hidden
+    >
+      Loading music...
+    </p1>
+
+  </section>
+
+
+  <!-- SINGLES -->
+
+  <section
+    class="section"
+    id="singles"
+    aria-label="Singles"
+  >
+
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">INDIVIDUAL RELEASES</p>
+        <h2>Singles</h2>
+      </div>
+    </div>
+
+    <div id="singlesGrid" class="music-grid"></div>
+
+  </section>
+
+
+  <!-- ALBUMS -->
+
+  <section
+    class="section"
+    id="albums"
+    aria-label="Albums"
+  >
+
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">FULL PROJECTS</p>
+        <h2>Albums</h2>
+      </div>
+    </div>
+
+    <div id="albumsGrid" class="music-grid"></div>
+
+  </section>
+
+
+  <!-- ARTIST SECTION -->
+
+  <section class="artist-banner" id="artists">
+
+    <div class="artist-banner-copy">
+
+      <p class="eyebrow">
+        YOUR MUSIC. YOUR AUDIENCE.
+      </p>
+
+      <h2>
+        Buy Or Sell Singles & Albums<br>
+        <span>Before Its Out & After.</span>
+      </h2>
+
+      <p>
+        Upload your own singles and albums, set your prices,
+        and reach listeners who want to support independent music.
+      </p>
+
+      <button
+        class="button button-accent"
+        id="artistStartButton"
+        type="button"
+      >
+        Start selling on FOGGY <span>↗</span>
+      </button>
+
+    </div>
+
+
+    <div class="commission-card">
+
+      <p class="eyebrow">
+        ARTIST-FIRST COMMISSION
+      </p>
+
+      <div class="commission-number">
+        86<span>%</span>
+      </div>
+
+      <p class="commission-label">
+        Artist share
+      </p>
+
+      <div class="commission-divider"></div>
+
+      <div class="commission-row">
+        <span>Artist receives</span>
+        <strong>86%</strong>
+      </div>
+
+      <div class="commission-row">
+        <span>FOGGY keeps</span>
+        <strong>14%</strong>
+      </div>
+
+      <small>
+        Before payment-processing fees, refunds, taxes or other
+        applicable adjustments. Final settlement rules will be
+        shown to artists.
+      </small>
+
+    </div>
+
+  </section>
+
+
+  <!-- HOW IT WORKS -->
+
+  <section class="section how-section">
+
+    <div class="section-heading">
+
+      <div>
+        <p class="eyebrow">SIMPLE BY DESIGN</p>
+        <h2>Music that stays yours.</h2>
+      </div>
+
+    </div>
+
+
+    <div class="steps-grid">
+
+      <article class="step">
+
+        <span class="step-number">01</span>
+
+        <div class="step-icon" aria-hidden="true">⌕</div>
+
+        <h3>Discover</h3>
+
+        <p>
+          Find new artists, singles and full albums in one place.
+        </p>
+
+      </article>
+
+
+      <article class="step">
+
+        <span class="step-number">02</span>
+
+        <div class="step-icon" aria-hidden="true">↗</div>
+
+        <h3>Purchase</h3>
+
+        <p>
+          Pay securely for the music you want to own.
+        </p>
+
+      </article>
+
+
+      <article class="step">
+
+        <span class="step-number">03</span>
+
+        <div class="step-icon" aria-hidden="true">♫</div>
+
+        <h3>Keep it</h3>
+
+        <p>
+          Your purchased singles and albums stay in your
+          FOGGY library, ready to play and download.
+        </p>
+
+      </article>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<!-- FOOTER -->
+
+<footer class="footer">
+
+  <a class="brand" href="#">
+    FOGGY<span>.</span>
+  </a>
+
+  <p>
+    Independent music. Direct connection.
+  </p>
+
+  <span>
+    © <span id="year"></span> FOGGY. All rights reserved.
+  </span>
+
+</footer>
+
+
+<!-- ARTIST REGISTRATION -->
+
+<dialog class="modal" id="artistModal">
+
+  <form
+    method="dialog"
+    class="modal-panel"
+    id="artistForm"
+  >
+
+    <button
+      class="modal-close"
+      aria-label="Close"
+      value="close"
+      type="submit"
+    >
+      ×
+    </button>
+
+    <p class="eyebrow">
+      FOGGY FOR ARTISTS
+    </p>
+
+    <h2>
+      Bring your music here.
+    </h2>
+
+    <p class="modal-intro">
+      Create your artist account, upload singles and albums,
+      and sell directly to your listeners.
+    </p>
+
+
+    <label>
+      Artist / stage name
+
+      <input
+        name="artistName"
+        type="text"
+        required
+        maxlength="80"
+        autocomplete="nickname"
+        placeholder="Your artist name"
+      >
+    </label>
+
+
+    <label>
+      Email address
+
+      <input
+        name="email"
+        type="email"
+        required
+        maxlength="254"
+        autocomplete="email"
+        placeholder="you@example.com"
+      >
+    </label>
+
+
+    <button
+      class="button button-accent"
+      id="artistInterestSubmit"
+      type="button"
+    >
+      Register as an artist
+    </button>
+
+    <p
+      class="form-message"
+      id="artistFormMessage"
+      aria-live="polite"
+    ></p>
+
+  </form>
+
+</dialog>
+
+
+<!-- CUSTOMER ACCOUNT -->
+
+<dialog class="modal" id="accountModal">
+
+  <form
+    class="modal-panel"
+    id="accountForm"
+    method="dialog"
+  >
+
+    <button
+      class="modal-close"
+      id="accountClose"
+      type="button"
+      aria-label="Close"
+    >
+      ×
+    </button>
+
+    <p class="eyebrow">
+      YOUR FOGGY ACCOUNT
+    </p>
+
+    <h2 id="accountTitle">
+      Welcome to FOGGY
+    </h2>
+
+    <p class="modal-intro" id="accountDescription">
+      Sign in to access your purchased music and personal library.
+    </p>
+
+
+    <label>
+      Email address
+
+      <input
+        id="accountEmail"
+        name="email"
+        type="email"
+        required
+        autocomplete="email"
+        placeholder="you@example.com"
+      >
+    </label>
+
+
+    <label>
+      Password
+
+      <input
+        id="accountPassword"
+        name="password"
+        type="password"
+        required
+        minlength="8"
+        autocomplete="current-password"
+        placeholder="Your password"
+      >
+    </label>
+
+
+    <button
+      class="button button-accent"
+      id="accountSubmit"
+      type="button"
+    >
+      Sign in
+    </button>
+
+
+    <p
+      class="form-message"
+      id="accountMessage"
+      aria-live="polite"
+    ></p>
+
+  </form>
+
+</dialog>
+
+
+<!-- INFORMATION / FEEDBACK MODAL -->
+
+<dialog class="modal" id="infoModal">
+
+  <div class="modal-panel">
+
+    <button
+      class="modal-close"
+      id="infoClose"
+      type="button"
+      aria-label="Close"
+    >
+      ×
+    </button>
+
+    <p class="eyebrow">
+      FOGGY
+    </p>
+
+    <h2 id="infoTitle">
+      Your music library
+    </h2>
+
+    <p
+      class="modal-intro"
+      id="infoText"
+    >
+      Your purchased music will appear here.
+    </p>
+
+    <button
+      class="button button-accent"
+      id="infoOkay"
+      type="button"
+    >
+      Got it
+    </button>
+
+  </div>
+
+</dialog>
+
+
+<!-- APPLICATION SCRIPT -->
+
+<script src="script.js" defer></script>
+
+</body>
+</html>
