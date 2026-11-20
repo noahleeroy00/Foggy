@@ -869,3 +869,37 @@ loadMusic();
   Commission calculations must ultimately
   be performed and recorded by the backend.
 */
+
+/* =========================================
+   FOGGY — PWA REGISTRATION
+   ========================================= */
+
+if ("serviceWorker" in navigator) {
+
+  window.addEventListener("load", () => {
+
+    navigator.serviceWorker.register("/sw.js", {
+      scope: "/"
+    })
+
+    .then(registration => {
+
+      console.log(
+        "FOGGY PWA registered:",
+        registration.scope
+      );
+
+    })
+
+    .catch(error => {
+
+      console.error(
+        "FOGGY PWA registration failed:",
+        error
+      );
+
+    });
+
+  });
+
+}
