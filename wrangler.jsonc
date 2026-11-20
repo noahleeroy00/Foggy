@@ -1,0 +1,43 @@
+
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "foggy",
+  "main": "src/index.js",
+  "compatibility_date": "2026-11-20",
+  "assets": {
+    "directory": ".",
+    "binding": "ASSETS",
+    "run_worker_first": [
+      "/api/*",
+      "/ws/*"
+    ]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "foggy-production",
+      "database_id": "cfb71baa-15b3-4571-811d-6478d191d756"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "MUSIC_BUCKET",
+      "bucket_name": "foggy-music"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "FOGGY_REALTIME",
+        "class_name": "FoggyRealtime"
+      }
+    ]
+  },
+
+  "exports": {
+    "FoggyRealtime": {
+      "type": "durable-object",
+      "storage": "sqlite"
+    }
+  }
+}
