@@ -5,7 +5,7 @@
    ========================================= */
 
 const SESSION_DAYS = 7;
-const PASSWORD_ITERATIONS = 310000;
+const PASSWORD_ITERATIONS = 100000;
 const COOKIE_NAME = "foggy_session";
 
 function json(data, status = 200, headers = {}) {
