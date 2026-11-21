@@ -3,6 +3,7 @@
    FOGGY — CLOUDFLARE WORKER BACKEND
    Database, static assets and real-time routing
    ========================================= */
+import { handleAuth } from "./auth.js";
 
 export { FoggyRealtime } from "./realtime.js";
 
@@ -134,9 +135,21 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
 
-    if (path === "/api/health" && request.method === "GET") {
-      return handleHealth(env);
-    }
+// Health check
+if (path === "/api/health" && request.method === "GET") {
+  return handleHealth(env);
+}
+
+// Authentication routes
+const authResponse = await handleAuth(request, env);
+
+if (authResponse) {
+  return authResponse;
+}
+
+if (authResponse) {
+  return authResponse;
+}
 
     if (path === "/api/music" && request.method === "GET") {
       return getMusic(env);
