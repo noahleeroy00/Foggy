@@ -300,6 +300,7 @@ export async function getCurrentUser(request, env) {
   };
 }
 
+
 async function registerCustomer(request, env) {
   let body;
 
@@ -320,9 +321,12 @@ async function registerCustomer(request, env) {
   }
 
   const id = crypto.randomUUID();
+  let stage = "password hashing";
 
   try {
     const passwordHash = await hashPassword(password);
+
+    stage = "database insertion";
 
     await env.DB
       .prepare(`
@@ -333,6 +337,8 @@ async function registerCustomer(request, env) {
       `)
       .bind(id, email, passwordHash)
       .run();
+
+    stage = "session creation";
 
     const token = await createSession(id, env);
 
@@ -349,14 +355,19 @@ async function registerCustomer(request, env) {
     });
 
   } catch (error) {
-    console.error("FOGGY customer registration:", error);
+    console.error("FOGGY customer registration failed:", {
+      stage,
+      errorName: error?.name,
+      errorMessage: error?.message
+    });
 
     return json({
       success: false,
-      message: "An account with these details may already exist."
-    }, 409);
+      message: "Customer registration failed. Please try again."
+    }, 500);
   }
 }
+
 
 async function registerArtist(request, env) {
   let body;
