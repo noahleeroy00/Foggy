@@ -4,6 +4,7 @@
    Database, static assets and real-time routing
    ========================================= */
 import { handleAuth } from "./auth.js";
+import { handleUploads } from "./uploads.js";
 
 export { FoggyRealtime } from "./realtime.js";
 
@@ -146,9 +147,10 @@ const authResponse = await handleAuth(request, env);
 if (authResponse) {
   return authResponse;
 }
+    const uploadResponse = await handleUploads(request, env);
 
-if (authResponse) {
-  return authResponse;
+if (uploadResponse) {
+  return uploadResponse;
 }
 
     if (path === "/api/music" && request.method === "GET") {
