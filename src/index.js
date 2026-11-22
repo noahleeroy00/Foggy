@@ -88,9 +88,6 @@ async function getMusic(env) {
     }, 500);
   }
 }
-
-// Route browser WebSocket connections to one shared Durable Object.
-
 async function getMusicCharts(env) {
   try {
     const result = await env.DB
@@ -140,7 +137,7 @@ async function getMusicCharts(env) {
     }, 500);
   }
 }
-
+// Route browser WebSocket connections to one shared Durable Object.
 async function handleRealtime(request, env) {
   const url = new URL(request.url);
   const origin = request.headers.get("Origin");

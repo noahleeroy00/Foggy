@@ -65,7 +65,19 @@ const state = {
   search: "",
   loading: false,
   catalogConnected: false,
-  currentUser: null
+  currentUser: null,
+
+  charts: {
+    singles: [],
+    albums: []
+  },
+
+  chartPage: {
+    singles: 0,
+    albums: 0
+  },
+
+  chartPageSize: 5
 };
 
 
@@ -270,6 +282,135 @@ async function loadMusic() {
 
   }
 
+}
+
+/* =========================================
+   FOGGY SALES CHARTS
+   ========================================= */
+
+function renderSalesChart(type) {
+  const container = type === "single"
+    ? elements.singlesChart
+    : elements.albumsChart;
+
+  const moreButton = type === "single"
+    ? elements.singlesChartMore
+    : elements.albumsChartMore;
+
+  const key = type === "single" ? "singles" : "albums";
+  const items = state.charts[key];
+  const visibleCount = (state.chartPage[key] + 1) * state.chartPageSize;
+  const visibleItems = items.slice(0, visibleCount);
+
+  if (!container) return;
+
+  container.replaceChildren();
+
+  if (!items.length) {
+    const message = document.createElement("p");
+    message.className = "chart-empty";
+    message.textContent = "No verified sales yet. Be among the first to discover independent music.";
+    container.appendChild(message);
+
+    if (moreButton) moreButton.hidden = true;
+    return;
+  }
+
+  visibleItems.forEach((item, index) => {
+    const row = document.createElement("div");
+    row.className = "hero-chart-item";
+
+    const rank = document.createElement("span");
+    rank.className = "chart-rank";
+    rank.textContent = `#${index + 1}`;
+
+    const artwork = document.createElement("img");
+    artwork.className = "chart-artwork";
+    artwork.alt = "";
+    artwork.loading = "lazy";
+
+    if (item.artworkUrl) {
+      artwork.src = item.artworkUrl;
+    }
+
+    const info = document.createElement("div");
+    info.className = "chart-track-info";
+
+    const title = document.createElement("span");
+    title.className = "chart-track-title";
+    title.textContent = safeText(item.title) || "Untitled";
+
+    const artist = document.createElement("span");
+    artist.className = "chart-track-artist";
+    artist.textContent = safeText(item.artist) || "Unknown artist";
+
+    const sales = document.createElement("span");
+    sales.className = "chart-sales";
+    const count = Number(item.totalSales);
+    sales.textContent = `${Number.isFinite(count) ? count : 0} verified sales`;
+
+    info.append(title, artist, sales);
+    row.append(rank, artwork, info);
+    container.appendChild(row);
+  });
+
+  if (moreButton) {
+    moreButton.hidden = visibleCount >= items.length;
+  }
+}
+
+
+async function loadMusicCharts() {
+  try {
+    const response = await apiRequest("/music/charts");
+
+    if (!response || response.success !== true) {
+      throw new Error("Invalid sales chart response.");
+    }
+
+    state.charts.singles = Array.isArray(response.singles)
+      ? response.singles
+      : [];
+
+    state.charts.albums = Array.isArray(response.albums)
+      ? response.albums
+      : [];
+
+    state.chartPage.singles = 0;
+    state.chartPage.albums = 0;
+
+    renderSalesChart("single");
+    renderSalesChart("album");
+
+  } catch (error) {
+    console.error("FOGGY sales charts:", error.message);
+
+    for (const container of [
+      elements.singlesChart,
+      elements.albumsChart
+    ]) {
+      if (!container) continue;
+
+      container.textContent = "Sales charts are temporarily unavailable.";
+    }
+  }
+}
+
+
+function setupSalesChartButtons() {
+  if (elements.singlesChartMore) {
+    elements.singlesChartMore.addEventListener("click", () => {
+      state.chartPage.singles++;
+      renderSalesChart("single");
+    });
+  }
+
+  if (elements.albumsChartMore) {
+    elements.albumsChartMore.addEventListener("click", () => {
+      state.chartPage.albums++;
+      renderSalesChart("album");
+    });
+  }
 }
 
 
@@ -1085,7 +1226,6 @@ async function loadCurrentUser() {
   }
 }
 
-
 /* =========================================
    INITIALISE FOGGY
    ========================================= */
@@ -1095,6 +1235,9 @@ renderMusic();
 loadCurrentUser();
 
 loadMusic();
+
+setupSalesChartButtons();
+loadMusicCharts();
 
 
 /* =========================================
