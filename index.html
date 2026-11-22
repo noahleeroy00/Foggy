@@ -432,56 +432,43 @@
 </footer>
 
 
+
 <!-- ARTIST REGISTRATION -->
 
 <dialog class="modal" id="artistModal">
-
-  <form
-    method="dialog"
-    class="modal-panel"
-    id="artistForm"
-  >
+  <form class="modal-panel" id="artistForm">
 
     <button
       class="modal-close"
+      id="artistClose"
+      type="button"
       aria-label="Close"
-      value="close"
-      type="submit"
-    >
-      ×
-    </button>
+    >×</button>
 
-    <p class="eyebrow">
-      FOGGY FOR ARTISTS
-    </p>
+    <p class="eyebrow">FOGGY FOR ARTISTS</p>
 
-    <h2>
-      Bring your music here.
-    </h2>
+    <h2>Bring your music here.</h2>
 
     <p class="modal-intro">
       Create your artist account, upload singles and albums,
       and sell directly to your listeners.
     </p>
 
-
     <label>
       Artist / stage name
-
       <input
         name="artistName"
         type="text"
         required
-        maxlength="80"
+        minlength="2"
+        maxlength="40"
         autocomplete="nickname"
         placeholder="Your artist name"
       >
     </label>
 
-
     <label>
       Email address
-
       <input
         name="email"
         type="email"
@@ -492,13 +479,53 @@
       >
     </label>
 
+    <label>
+      Phone number
+      <input
+        name="phone"
+        type="tel"
+        required
+        autocomplete="tel"
+        placeholder="+27..."
+      >
+    </label>
+
+    <label>
+      Password
+      <input
+        id="accountPassword"
+        name="password"
+        type="password"
+        required
+        minlength="12"
+        maxlength="128"
+        autocomplete="new-password"
+        placeholder="At least 12 Characters"
+      >
+    </label>
+
+    <label>
+      Artist bio (optional)
+      <textarea
+        name="bio"
+        maxlength="500"
+        placeholder="Tell listeners about yourself"
+      ></textarea>
+    </label>
 
     <button
       class="button button-accent"
       id="artistInterestSubmit"
-      type="button"
+      type="submit"
     >
       Register as an artist
+    </button>
+    <button
+  class="button"
+  id="artistModeToggle"
+  type="button"
+>
+  Already have an artist account? Sign in
     </button>
 
     <p
@@ -508,9 +535,7 @@
     ></p>
 
   </form>
-
 </dialog>
-
 
 <!-- CUSTOMER ACCOUNT -->
 
@@ -566,17 +591,25 @@
         name="password"
         type="password"
         required
-        minlength="8"
+        minlength="12"
+        maxlength="128"
         autocomplete="current-password"
-        placeholder="Your password"
+        placeholder="Your Password"
       >
     </label>
+      <button
+  type="button"
+  class="button"
+  id="accountModeToggle"
+>
+  Create a customer account instead
+      </button>
 
 
     <button
       class="button button-accent"
       id="accountSubmit"
-      type="button"
+      type="submit"
     >
       Sign in
     </button>
