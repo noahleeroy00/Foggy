@@ -90,6 +90,57 @@ async function getMusic(env) {
 }
 
 // Route browser WebSocket connections to one shared Durable Object.
+
+async function getMusicCharts(env) {
+  try {
+    const result = await env.DB
+      .prepare(`
+        SELECT
+          ms.music_id AS id,
+          ms.type,
+          ms.title,
+          m.artist_name AS artist,
+          m.artwork_key,
+          ms.total_sales
+        FROM music_sales ms
+        INNER JOIN music m
+          ON m.id = ms.music_id
+        INNER JOIN artists a
+          ON a.id = m.artist_id
+        WHERE ms.status = 'published'
+          AND a.status = 'active'
+          AND ms.type IN ('single', 'album')
+        ORDER BY ms.total_sales DESC, ms.title COLLATE NOCASE ASC
+      `)
+      .all();
+
+    const items = (result.results || []).map(item => ({
+      id: item.id,
+      type: item.type,
+      title: item.title,
+      artist: item.artist,
+      artworkUrl: item.artwork_key
+        ? `/api/artwork/${encodeURIComponent(item.id)}`
+        : "",
+      totalSales: Number(item.total_sales || 0)
+    }));
+
+    return jsonResponse({
+      success: true,
+      singles: items.filter(item => item.type === "single"),
+      albums: items.filter(item => item.type === "album")
+    });
+
+  } catch (error) {
+    console.error("FOGGY sales charts:", error);
+
+    return jsonResponse({
+      success: false,
+      message: "Unable to load sales charts."
+    }, 500);
+  }
+}
+
 async function handleRealtime(request, env) {
   const url = new URL(request.url);
   const origin = request.headers.get("Origin");
@@ -152,7 +203,9 @@ if (authResponse) {
 if (uploadResponse) {
   return uploadResponse;
 }
-
+if (path === "/api/music/charts" && request.method === "GET") {
+  return getMusicCharts(env);
+}
     if (path === "/api/music" && request.method === "GET") {
       return getMusic(env);
     }
