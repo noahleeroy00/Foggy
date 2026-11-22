@@ -121,24 +121,47 @@
     </div>
 
 
-    <div class="hero-art" aria-label="FOGGY record artwork">
+    
+<div class="hero-art foggy-charts" aria-label="FOGGY top-selling music charts">
 
-      <div class="art-orbit orbit-one"></div>
-      <div class="art-orbit orbit-two"></div>
-
-      <div class="art-disc">
-        <div class="disc-label">F<span>.</span></div>
+  <div class="chart-panel">
+    <div class="chart-heading">
+      <div>
+        <p class="eyebrow">THE BEST PERFORMING</p>
+        <h3>Top Selling Singles</h3>
       </div>
-
-      <div class="art-caption">
-        YOUR NEXT<br>ADDICTIVE SOUND.
-      </div>
-
-      <div class="art-index">
-        001 / FOGGY
-      </div>
-
+      <span class="chart-type">SINGLES</span>
     </div>
+
+    <div id="singlesChart" class="hero-chart-list">
+      <p class="chart-empty">Loading singles chart...</p>
+    </div>
+
+    <button type="button" id="singlesChartMore" class="chart-more" hidden>
+      LOAD MORE SINGLES
+    </button>
+  </div>
+
+  <div class="chart-panel">
+    <div class="chart-heading">
+      <div>
+        <p class="eyebrow">THE BEST PERFORMING</p>
+        <h3>Top Selling Albums</h3>
+      </div>
+      <span class="chart-type">ALBUMS</span>
+    </div>
+
+    <div id="albumsChart" class="hero-chart-list">
+      <p class="chart-empty">Loading albums chart...</p>
+    </div>
+
+    <button type="button" id="albumsChartMore" class="chart-more" hidden>
+      LOAD MORE ALBUMS
+    </button>
+  </div>
+
+</div>
+
 
   </section>
 
