@@ -5,6 +5,7 @@
    ========================================= */
 import { handleAuth, getCurrentUser } from "./auth.js";
 import { handleUploads } from "./uploads.js";
+import { handleArtistDashboard } from "./artists.js";
 
 export { FoggyRealtime } from "./realtime.js";
 
@@ -200,6 +201,13 @@ if (authResponse) {
 if (uploadResponse) {
   return uploadResponse;
 }
+
+    const artistResponse = await handleArtistDashboard(request, env);
+
+    if (artistResponse) {
+      return artistResponse;
+    }
+
 if (path === "/api/music/charts" && request.method === "GET") {
   return getMusicCharts(env);
 }

@@ -417,10 +417,10 @@ async function registerArtist(request, env) {
 
       env.DB.prepare(`
         INSERT INTO artists (
-          id, user_id, artist_name, contact_phone
+          id, user_id, artist_name, contact_phone, bio
         )
-        VALUES (?, ?, ?, ?)
-      `).bind(artistId, userId, artistName, phone)
+        VALUES (?, ?, ?, ?, ?)
+      `).bind(artistId, userId, artistName, phone, bio || null)
     ]);
 
     const token = await createSession(userId, env);
