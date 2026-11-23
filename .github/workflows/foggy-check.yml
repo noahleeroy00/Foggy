@@ -1,0 +1,33 @@
+name: FOGGY Build Check
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout FOGGY
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check JavaScript syntax
+        run: |
+          node --check src/auth.js
+          node --check src/artists.js
+          node --check src/index.js
+          node --check src/uploads.js
+
+      - name: Check Wrangler
+        run: npx --yes wrangler@4.167.0 --version
+
+      - name: Build FOGGY without deploying
+        run: npx --yes wrangler@4.167.0 deploy --dry-run
