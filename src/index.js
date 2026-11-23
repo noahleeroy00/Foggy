@@ -3,7 +3,7 @@
    FOGGY — CLOUDFLARE WORKER BACKEND
    Database, static assets and real-time routing
    ========================================= */
-import { handleAuth } from "./auth.js";
+import { handleAuth, getCurrentUser } from "./auth.js";
 import { handleUploads } from "./uploads.js";
 
 export { FoggyRealtime } from "./realtime.js";
@@ -216,6 +216,39 @@ if (path === "/api/music/charts" && request.method === "GET") {
         success: false,
         message: "API endpoint not implemented yet."
       }, 404);
+    }
+
+    // Protect the private administrator page before serving static assets.
+    if (path === "/admin.html") {
+      if (request.method !== "GET") {
+        return new Response("Not Found", { status: 404 });
+      }
+
+      try {
+        const user = await getCurrentUser(request, env);
+
+        if (!user || user.role !== "admin") {
+          return new Response("Not Found", {
+            status: 404,
+            headers: { "Cache-Control": "no-store" }
+          });
+        }
+
+        const page = await env.ASSETS.fetch(request);
+        const headers = new Headers(page.headers);
+        headers.set("Cache-Control", "no-store");
+
+        return new Response(page.body, {
+          status: page.status,
+          statusText: page.statusText,
+          headers
+        });
+      } catch {
+        return new Response("Not Found", {
+          status: 404,
+          headers: { "Cache-Control": "no-store" }
+        });
+      }
     }
 
     // Serve the existing FOGGY frontend.

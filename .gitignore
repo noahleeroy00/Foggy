@@ -2,3 +2,7 @@
 # Local session cookies - never upload
 cookies.txt
 artist-cookies.txt
+
+# Local backups - never commit
+backups/
+FOGGY-BACKUP-*.zip

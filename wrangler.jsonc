@@ -8,10 +8,11 @@
     "directory": ".",
     "binding": "ASSETS",
     "run_worker_first": [
-  "/api/*",
-  "/ws",
-  "/ws/*"
-]
+      "/api/*",
+      "/ws",
+      "/ws/*",
+      "/admin.html"
+    ]
   },
   "d1_databases": [
     {

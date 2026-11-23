@@ -8,3 +8,6 @@ package.json
 package-lock.json
 README.md
 .assetsignore
+# Local backups - never publish as website assets
+backups/
+FOGGY-BACKUP-*.zip

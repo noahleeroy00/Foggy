@@ -544,6 +544,106 @@ async function login(request, env, expectedRole) {
   }
 }
 
+function constantTimeEqual(a, b) {
+  if (typeof a !== "string" || typeof b !== "string") return false;
+
+  const left = new TextEncoder().encode(a);
+  const right = new TextEncoder().encode(b);
+
+  let difference = left.length ^ right.length;
+  const length = Math.max(left.length, right.length);
+
+  for (let i = 0; i < length; i++) {
+    difference |= (left[i] || 0) ^ (right[i] || 0);
+  }
+
+  return difference === 0;
+}
+
+async function bootstrapAdmin(request, env) {
+  const suppliedToken = request.headers.get(
+    "X-FOGGY-BOOTSTRAP-TOKEN"
+  );
+
+  if (
+    !env.FOGGY_ADMIN_BOOTSTRAP_TOKEN ||
+    !constantTimeEqual(
+      suppliedToken,
+      env.FOGGY_ADMIN_BOOTSTRAP_TOKEN
+    )
+  ) {
+    return json({
+      success: false,
+      message: "Admin setup is unavailable or unauthorized."
+    }, 403);
+  }
+
+  let body;
+
+  try {
+    body = await readBody(request);
+  } catch {
+    return json({
+      success: false,
+      message: "Invalid request."
+    }, 400);
+  }
+
+  const email = String(body.email || "").trim().toLowerCase();
+  const password = body.password;
+
+  if (!validEmail(email) || !validPassword(password)) {
+    return json({
+      success: false,
+      message: "Enter a valid email and a password of at least 12 characters."
+    }, 400);
+  }
+
+  try {
+    const passwordHash = await hashPassword(password);
+    const id = crypto.randomUUID();
+
+    const result = await env.DB.prepare(`
+      INSERT INTO users (
+        id, email, password_hash, role
+      )
+      SELECT ?, ?, ?, 'admin'
+      WHERE NOT EXISTS (
+        SELECT 1 FROM users WHERE role = 'admin'
+      )
+    `).bind(id, email, passwordHash).run();
+
+    if (!result.meta?.changes) {
+      return json({
+        success: false,
+        message: "An administrator already exists. Bootstrap is permanently closed."
+      }, 409);
+    }
+
+    const token = await createSession(id, env);
+
+    return json({
+      success: true,
+      message: "First administrator created.",
+      user: {
+        id,
+        email,
+        role: "admin"
+      }
+    }, 201, {
+      "Set-Cookie": sessionCookie(token)
+    });
+
+  } catch (error) {
+    console.error("FOGGY admin bootstrap:", error?.name);
+
+    return json({
+      success: false,
+      message: "Unable to create the administrator."
+    }, 500);
+  }
+}
+
 async function logout(request, env) {
   const token = getCookie(request, COOKIE_NAME);
 
@@ -580,6 +680,13 @@ export async function handleAuth(request, env) {
 
   try {
     if (
+      path === "/api/auth/admin/bootstrap" &&
+      method === "POST"
+    ) {
+      return await bootstrapAdmin(request, env);
+    }
+
+    if (
       path === "/api/auth/customer/register" &&
       method === "POST"
     ) {
@@ -605,6 +712,13 @@ export async function handleAuth(request, env) {
       method === "POST"
     ) {
       return await login(request, env, "artist");
+    }
+
+    if (
+      path === "/api/auth/admin/login" &&
+      method === "POST"
+    ) {
+      return await login(request, env, "admin");
     }
 
     if (
